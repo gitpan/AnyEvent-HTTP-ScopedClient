@@ -1,0 +1,11 @@
+INSTALL
+LICENSE
+MANIFEST
+META.yml
+Makefile.PL
+README.md
+dist.ini
+lib/AnyEvent/HTTP/ScopedClient.pm
+t/00-load.t
+t/scoped-client.t
+weaver.ini
