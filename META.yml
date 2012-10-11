@@ -27,4 +27,4 @@ requires:
   URI::QueryParam: 0
   namespace::autoclean: 0
   utf8: 0
-version: 0.0.1
+version: 0.0.2

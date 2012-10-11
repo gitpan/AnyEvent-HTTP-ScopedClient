@@ -1,7 +1,8 @@
 package AnyEvent::HTTP::ScopedClient;
 {
-  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.1';
+  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.2';
 }
+
 # ABSTRACT: L<AnyEvent> based L<https://github.com/technoweenie/node-scoped-http-client>
 
 use Moose;
@@ -119,7 +120,15 @@ sub auth {
 
 sub header {
     my ( $self, $name, $value ) = @_;
-    $self->options->{headers}{$name} = $value;
+    if ( 'HASH' eq ref $name ) {
+        while ( my ( $k, $v ) = each %$name ) {
+            $self->options->{headers}{$k} = $v;
+        }
+    }
+    else {
+        $self->options->{headers}{$name} = $value;
+    }
+
     return $self;
 }
 
@@ -162,31 +171,29 @@ AnyEvent::HTTP::ScopedClient - L<AnyEvent> based L<https://github.com/technoween
 
 =head1 VERSION
 
-version 0.0.1
+version 0.0.2
 
 =head1 SYNOPSIS
 
     my $client = AnyEvent::HTTP::ScopedClient->new('http://example.com');
     $client->request('GET', sub {
         my ($body, $hdr) = @_;    # $body is undef if error occured
-        return if ( !$body || !$hdr->{Status} =~ /^2/ );
+        return if ( !$body || $hdr->{Status} !~ /^2/ );
         # do something;
     });
 
     # shorcut for GET
     $client->get(sub {
-        my ($body, $hdr) = @_;    # $body is undef if error occured
-        return if ( !$body || !$hdr->{Status} =~ /^2/ );
-        # do something;
+        my ($body, $hdr) = @_;
+        # ...
     });
 
     # Content-Type: application/x-www-form-urlencoded
     $client->post(
         { foo => 1, bar => 2 },    # note this.
         sub {
-            my ($body, $hdr) = @_;    # $body is undef if error occured
-            return if ( !$body || !$hdr->{Status} =~ /^2/ );
-            # do something;
+            my ($body, $hdr) = @_;
+            # ...
         }
     );
 
@@ -194,9 +201,8 @@ version 0.0.1
     $client->post(
         "foo=1&bar=2"    # and note this.
         sub {
-            my ($body, $hdr) = @_;    # $body is undef if error occured
-            return if ( !$body || !$hdr->{Status} =~ /^2/ );
-            # do something;
+            my ($body, $hdr) = @_;
+            # ...
         }
     );
 
@@ -206,20 +212,31 @@ version 0.0.1
         ->post(
             encode_json({ foo => 1 }),
             sub {
-                my ($body, $hdr) = @_;    # $body is undef if error occured
-                return if ( !$body || !$hdr->{Status} =~ /^2/ );
-                # do something;
+                my ($body, $hdr) = @_;
+                # ...
             }
         );
 
     $client->header('Accept', 'application/json')
         ->query({ key => 'value' })
         ->query('key', 'value')
-        ->get(sub {
-            my ($body, $hdr) = @_;    # $body is undef if error occured
-            return if ( !$body || !$hdr->{Status} =~ /^2/ );
-            # do something;
-    });
+        ->get(
+            sub {
+                my ($body, $hdr) = @_;
+                # ...
+            }
+        );
+
+    # headers at once
+    $client->header({
+        Accept        => '*/*',
+        Authorization => 'Basic abcd'
+    })->get(
+        sub {
+            my ($body, $hdr) = @_;
+            # ...
+        }
+    );
 
 =head1 DESCRIPTION
 
