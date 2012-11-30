@@ -1,5 +1,8 @@
 go to https://github.com/aanoaa/AnyEvent-HTTP-ScopedClient/issues for the roadmap and known issues.
 
+0.0.3    Fri Nov 30 10:04:43 2012 KST
+    - depend `Host` req header to `AnyEvent::HTTP`
+
 0.0.2    Thu Oct 11 10:59:18 2012 KST
     - support editing multiple header at once
     - enhancement test

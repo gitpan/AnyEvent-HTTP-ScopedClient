@@ -1,6 +1,6 @@
 package AnyEvent::HTTP::ScopedClient;
 {
-  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.2';
+  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.3';
 }
 
 # ABSTRACT: L<AnyEvent> based L<https://github.com/technoweenie/node-scoped-http-client>
@@ -41,7 +41,6 @@ sub request {
 
         my $sendingData =
           ( $method =~ m/^P/ && $reqBody && length $reqBody > 0 ) ? 1 : 0;
-        $headers{Host} = $options{url}->host . ':' . $options{url}->port;
         $headers{'Content-Length'} = length $reqBody if $sendingData;
         $headers{'Content-Type'} = 'application/x-www-form-urlencoded'
           if ( $sendingData && !$headers{'Content-Type'} );
@@ -49,6 +48,16 @@ sub request {
         if ( $options{auth} ) {
             $headers{Authorization} =
               'Basic ' . encode_base64( $options{auth} );
+        }
+
+        if ($ENV{DEBUG}) {
+            print "$method " . $self->options->{url} . "\n";
+            while (my ($k, $v) = each %headers) {
+                print "$k: $v\n";
+            }
+
+            print "\n";
+            print "$reqBody\n" if $sendingData;
         }
 
         http_request(
@@ -171,7 +180,7 @@ AnyEvent::HTTP::ScopedClient - L<AnyEvent> based L<https://github.com/technoween
 
 =head1 VERSION
 
-version 0.0.2
+version 0.0.3
 
 =head1 SYNOPSIS
 
