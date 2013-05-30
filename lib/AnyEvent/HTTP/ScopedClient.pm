@@ -1,6 +1,6 @@
 package AnyEvent::HTTP::ScopedClient;
 {
-  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.3';
+  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.4';
 }
 
 # ABSTRACT: L<AnyEvent> based L<https://github.com/technoweenie/node-scoped-http-client>
@@ -16,6 +16,7 @@ use HTTP::Request;
 use Encode qw/encode_utf8/;
 use AnyEvent::HTTP;
 use URI::QueryParam;
+use URI::Escape;
 
 has 'options' => (
     is  => 'ro',
@@ -35,7 +36,8 @@ sub request {
 
         if ( 'HASH' eq ref($reqBody) ) {
             my @pair;
-            push @pair, "$_=$reqBody->{$_}" for ( keys %$reqBody );
+            # push @pair, "$_=$reqBody->{$_}" for ( keys %$reqBody );
+            push @pair, "$_=" . uri_escape_utf8($reqBody->{$_}) for ( keys %$reqBody );
             $reqBody = join( '&', @pair );
         }
 
@@ -180,7 +182,7 @@ AnyEvent::HTTP::ScopedClient - L<AnyEvent> based L<https://github.com/technoween
 
 =head1 VERSION
 
-version 0.0.3
+version 0.0.4
 
 =head1 SYNOPSIS
 

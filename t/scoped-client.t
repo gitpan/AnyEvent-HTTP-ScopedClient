@@ -1,3 +1,4 @@
+use utf8;
 use strict;
 use warnings;
 use Test::More tests => 2;
@@ -20,7 +21,7 @@ $http->header( { 'Accept' => '*/*' } )->get(
 
 $cv->begin;
 $http->post(
-    { foo => 'bar', bar => 'baz' },
+    { foo => 'bar', bar => 'baz', baz => '유니코드' },
     sub {
         my ( $body, $hdr ) = @_;
         diag("$hdr->{Status}: $hdr->{Reason}") if $hdr->{Status} !~ /^2/;
