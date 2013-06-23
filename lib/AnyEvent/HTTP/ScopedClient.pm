@@ -1,6 +1,6 @@
 package AnyEvent::HTTP::ScopedClient;
 {
-  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.4';
+  $AnyEvent::HTTP::ScopedClient::VERSION = '0.0.5';
 }
 
 # ABSTRACT: L<AnyEvent> based L<https://github.com/technoweenie/node-scoped-http-client>
@@ -8,7 +8,6 @@ package AnyEvent::HTTP::ScopedClient;
 use Moose;
 use namespace::autoclean;
 
-use utf8;
 use URI;
 use Try::Tiny;
 use MIME::Base64;
@@ -36,25 +35,27 @@ sub request {
 
         if ( 'HASH' eq ref($reqBody) ) {
             my @pair;
+
             # push @pair, "$_=$reqBody->{$_}" for ( keys %$reqBody );
-            push @pair, "$_=" . uri_escape_utf8($reqBody->{$_}) for ( keys %$reqBody );
+            push @pair, "$_=" . uri_escape_utf8( $reqBody->{$_} )
+                for ( keys %$reqBody );
             $reqBody = join( '&', @pair );
         }
 
-        my $sendingData =
-          ( $method =~ m/^P/ && $reqBody && length $reqBody > 0 ) ? 1 : 0;
+        my $sendingData
+            = ( $method =~ m/^P/ && $reqBody && length $reqBody > 0 ) ? 1 : 0;
         $headers{'Content-Length'} = length $reqBody if $sendingData;
         $headers{'Content-Type'} = 'application/x-www-form-urlencoded'
-          if ( $sendingData && !$headers{'Content-Type'} );
+            if ( $sendingData && !$headers{'Content-Type'} );
 
         if ( $options{auth} ) {
-            $headers{Authorization} =
-              'Basic ' . encode_base64( $options{auth} );
+            $headers{Authorization}
+                = 'Basic ' . encode_base64( $options{auth}, '' );
         }
 
-        if ($ENV{DEBUG}) {
+        if ( $ENV{DEBUG} ) {
             print "$method " . $self->options->{url} . "\n";
-            while (my ($k, $v) = each %headers) {
+            while ( my ( $k, $v ) = each %headers ) {
                 print "$k: $v\n";
             }
 
@@ -182,7 +183,7 @@ AnyEvent::HTTP::ScopedClient - L<AnyEvent> based L<https://github.com/technoween
 
 =head1 VERSION
 
-version 0.0.4
+version 0.0.5
 
 =head1 SYNOPSIS
 

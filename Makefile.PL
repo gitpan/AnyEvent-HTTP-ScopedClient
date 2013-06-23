@@ -29,16 +29,16 @@ my %WriteMakefileArgs = (
     "URI" => 0,
     "URI::Escape" => 0,
     "URI::QueryParam" => 0,
-    "namespace::autoclean" => 0,
-    "utf8" => 0
+    "namespace::autoclean" => 0
   },
   "TEST_REQUIRES" => {
     "AnyEvent" => 0,
     "Test::More" => 0,
     "strict" => 0,
+    "utf8" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.0.4",
+  "VERSION" => "0.0.5",
   "test" => {
     "TESTS" => "t/*.t"
   }

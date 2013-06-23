@@ -1,6 +1,6 @@
 ## Scoped HTTP Client for Perl ##
 
-Yet another [AnyEvent::HTTP](http://search.cpan.org/~mlehmann/AnyEvent-HTTP-2.14/HTTP.pm) based client.
+Yet another [AnyEvent::HTTP](http://search.cpan.org/~mlehmann/AnyEvent-HTTP/HTTP.pm) based client.
 
 stolen from [Scoped HTTP Client for Node.js](https://github.com/technoweenie/node-scoped-http-client)
 
